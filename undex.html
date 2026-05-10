@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Aaryan | Portfolio</title>
+  <style>
+    :root[data-theme="dark"] {
+      --bg:#0d0d0d;--bg2:#141414;--bg3:#1a1a1a;--text:#ffffff;--text2:#888888;--text3:#444444;
+      --accent:#00ff88;--accent2:#0088ff;--card:#141414;--border:#222222;
+    }
+    :root[data-theme="light"] {
+      --bg:#ffffff;--bg2:#f5f5f5;--bg3:#eeeeee;--text:#0d0d0d;--text2:#666666;--text3:#aaaaaa;
+      --accent:#00aa55;--accent2:#0055cc;--card:#ffffff;--border:#e0e0e0;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{font-family:'Segoe UI',-apple-system,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;transition:background .4s,color .4s;}
+    ::-webkit-scrollbar{width:3px;}
+    ::-webkit-scrollbar-thumb{background:var(--accent);}
+
+    nav{position:fixed;top:0;left:0;right:0;z-index:999;padding:1.2rem 4rem;display:flex;justify-content:space-between;align-items:center;transition:background .3s,border .3s;}
+    nav.scrolled{background:var(--bg);border-bottom:1px solid var(--border);backdrop-filter:blur(20px);}
+    .nav-logo{font-size:1.1rem;font-weight:800;letter-spacing:3px;color:var(--text);text-transform:uppercase;}
+    .nav-logo span{color:var(--accent);}
+    .nav-right{display:flex;gap:2rem;align-items:center;}
+    .nav-right a{font-size:.8rem;font-weight:500;letter-spacing:2px;color:var(--text2);text-decoration:none;text-transform:uppercase;transition:color .2s;}
+    .nav-right a:hover{color:var(--accent);}
+    .theme-toggle{width:36px;height:20px;border-radius:10px;background:var(--border);border:none;cursor:pointer;position:relative;transition:background .3s;}
+    .theme-toggle::after{content:'';position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:var(--accent);transition:transform .3s;}
+    [data-theme="light"] .theme-toggle::after{transform:translateX(16px);}
+
+    .hero{min-height:100vh;display:flex;align-items:center;padding:0 4rem;position:relative;overflow:hidden;}
+    .hero-content{max-width:900px;}
+    .hero-eyebrow{font-size:.75rem;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:var(--accent);margin-bottom:1.5rem;opacity:0;animation:slideRight .8s ease forwards .3s;display:flex;align-items:center;gap:12px;}
+    .hero-eyebrow::before{content:'';display:block;width:40px;height:1px;background:var(--accent);}
+    .hero-title{font-size:clamp(4rem,12vw,10rem);font-weight:900;line-height:.9;letter-spacing:-3px;color:var(--text);margin-bottom:2rem;}
+    .hero-title .line{display:block;overflow:hidden;}
+    .hero-title .line span{display:block;opacity:0;animation:slideUp .9s cubic-bezier(.16,1,.3,1) forwards;}
+    .hero-title .line:nth-child(1) span{animation-delay:.5s;}
+    .hero-title .line:nth-child(2) span{animation-delay:.7s;}
+    .accent-word{color:var(--accent);}
+    .hero-sub{font-size:1rem;color:var(--text2);line-height:1.8;max-width:500px;margin-bottom:3rem;opacity:0;animation:slideRight .8s ease forwards 1s;}
+    .hero-actions{display:flex;gap:1rem;flex-wrap:wrap;opacity:0;animation:slideRight .8s ease forwards 1.2s;}
+    .btn{padding:14px 32px;border-radius:2px;font-size:.8rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;text-decoration:none;cursor:pointer;border:none;transition:all .3s;font-family:inherit;}
+    .btn-fill{background:var(--accent);color:var(--bg);}
+    .btn-fill:hover{transform:translateY(-3px);box-shadow:0 15px 30px rgba(0,255,136,.25);}
+    .btn-ghost{background:transparent;color:var(--text);border:1px solid var(--border);}
+    .status-strip{display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:2rem;opacity:0;animation:slideRight .8s ease forwards .9s;}
+    .status-pill{padding:6px 16px;border-radius:100px;font-size:.75rem;font-weight:600;letter-spacing:1px;border:1px solid;}
+    .status-pill.green{color:#00ff88;border-color:#00ff8844;background:#00ff8811;}
+    .status-pill.blue{color:#0088ff;border-color:#0088ff44;background:#0088ff11;}
+    .status-pill.yellow{color:#ffcc00;border-color:#ffcc0044;background:#ffcc0011;}
+    [data-theme="light"] .status-pill.green{color:#00aa55;border-color:#00aa5544;background:#00aa5511;}
+    [data-theme="light"] .status-pill.blue{color:#0055cc;border-color:#0055cc44;background:#0055cc11;}
+    [data-theme="light"] .status-pill.yellow{color:#aa8800;border-color:#aa880044;background:#aa880011;}
+    .btn-ghost:hover{border-color:var(--text);transform:translateY(-3px);}
+    .hero-scroll{position:absolute;bottom:2rem;left:4rem;font-size:.7rem;letter-spacing:3px;color:var(--text3);text-transform:uppercase;display:flex;align-items:center;gap:12px;opacity:0;animation:fadeIn 1s ease forwards 1.8s;}
+    .hero-scroll::after{content:'';display:block;width:60px;height:1px;background:var(--text3);animation:expandLine 1.5s ease infinite;}
+    @keyframes expandLine{0%,100%{width:40px}50%{width:80px}}
+    .hero-counter{position:absolute;right:4rem;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:2rem;align-items:center;opacity:0;animation:fadeIn 1s ease forwards 1.5s;}
+    .counter-item{text-align:center;}
+    .counter-num{font-size:2rem;font-weight:900;color:var(--accent);line-height:1;}
+    .counter-label{font-size:.6rem;letter-spacing:2px;color:var(--text2);text-transform:uppercase;margin-top:4px;}
+
+    .reveal{opacity:0;transform:translateY(60px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1);}
+    .reveal.active{opacity:1;transform:translateY(0);}
+    .reveal-delay-1{transition-delay:.1s;}
+    .reveal-delay-2{transition-delay:.2s;}
+    .reveal-delay-3{transition-delay:.3s;}
+    .reveal-delay-4{transition-delay:.4s;}
+
+    .section{padding:8rem 4rem;}
+    .section-header{margin-bottom:5rem;}
+    .section-number{font-size:.7rem;font-weight:700;letter-spacing:4px;color:var(--accent);text-transform:uppercase;margin-bottom:1rem;}
+    .section-big-title{font-size:clamp(2.5rem,6vw,5rem);font-weight:900;letter-spacing:-2px;line-height:1;color:var(--text);}
+    .section-big-title .dim{color:var(--text3);}
+
+    .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:start;}
+    @media(max-width:768px){.about-grid{grid-template-columns:1fr;gap:3rem;}.hero-counter{display:none;}.nav-right a{display:none;}.hero{padding:0 2rem;}.section{padding:5rem 2rem;}nav{padding:1rem 2rem;}footer{flex-direction:column;gap:.5rem;}}
+    .about-text{font-size:1.05rem;color:var(--text2);line-height:1.9;}
+    .about-text p{margin-bottom:1.5rem;}
+    .about-text strong{color:var(--text);font-weight:600;}
+    .about-details{display:flex;flex-direction:column;}
+    .detail-row{display:flex;justify-content:space-between;align-items:center;padding:1.2rem 0;border-bottom:1px solid var(--border);font-size:.85rem;}
+    .detail-row:first-child{border-top:1px solid var(--border);}
+    .detail-key{color:var(--text3);letter-spacing:1px;text-transform:uppercase;font-size:.7rem;}
+    .detail-val{color:var(--text);font-weight:500;text-align:right;}
+    .detail-val.green{color:var(--accent);}
+
+    .skills-section{background:var(--bg2);}
+    .skills-marquee-wrap{overflow:hidden;margin-bottom:1rem;}
+    .skills-marquee{display:flex;gap:1rem;width:max-content;animation:marquee 25s linear infinite;}
+    .skills-marquee.reverse{animation-direction:reverse;}
+    @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+    .skill-pill{display:flex;align-items:center;gap:10px;padding:12px 24px;border-radius:100px;background:var(--bg3);border:1px solid var(--border);font-size:.85rem;font-weight:500;color:var(--text2);white-space:nowrap;letter-spacing:.5px;}
+    .skill-pill span{font-size:1.1rem;}
+
+    .projects-list{display:flex;flex-direction:column;}
+    .project-row{display:flex;justify-content:space-between;align-items:center;padding:2.5rem 0;border-bottom:1px solid var(--border);cursor:pointer;transition:all .3s;position:relative;text-decoration:none;color:inherit;}
+    .project-row:first-child{border-top:1px solid var(--border);}
+    .project-row::after{content:'→';position:absolute;right:0;font-size:1.5rem;color:var(--accent);opacity:0;transform:translateX(-10px);transition:all .3s;}
+    .project-row:hover::after{opacity:1;transform:translateX(0);}
+    .project-row:hover .proj-title{color:var(--accent);transform:translateX(8px);}
+    .proj-left{display:flex;align-items:center;gap:2rem;}
+    .proj-num{font-size:.7rem;color:var(--text3);letter-spacing:2px;min-width:30px;}
+    .proj-title{font-size:clamp(1.3rem,3vw,2rem);font-weight:800;letter-spacing:-1px;transition:all .3s;}
+    .proj-right{display:flex;gap:1rem;flex-wrap:wrap;}
+    .proj-tag{font-size:.65rem;padding:4px 12px;border-radius:100px;border:1px solid var(--border);color:var(--text3);letter-spacing:1px;text-transform:uppercase;}
+
+    .contact-section{text-align:center;}
+    .contact-big{font-size:clamp(3rem,10vw,8rem);font-weight:900;letter-spacing:-3px;line-height:1;margin-bottom:2rem;color:var(--text);}
+    .contact-big span{color:var(--accent);}
+    .contact-sub{font-size:1rem;color:var(--text2);margin-bottom:3rem;line-height:1.7;}
+    .contact-links{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+    .contact-pill{padding:14px 28px;border-radius:100px;border:1px solid var(--border);font-size:.8rem;font-weight:600;letter-spacing:1px;color:var(--text2);text-decoration:none;text-transform:uppercase;transition:all .3s;}
+    .contact-pill:hover{background:var(--accent);color:var(--bg);border-color:var(--accent);transform:translateY(-3px);}
+
+    footer{padding:2rem 4rem;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);font-size:.7rem;color:var(--text3);letter-spacing:2px;text-transform:uppercase;}
+
+    @keyframes slideUp{from{opacity:0;transform:translateY(100%)}to{opacity:1;transform:translateY(0)}}
+    @keyframes slideRight{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:translateX(0)}}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+    .coming-soon-row{opacity:.6;cursor:default;}
+    .coming-soon-row::after{display:none!important;}
+    .coming-soon-row:hover .proj-title{color:var(--text3)!important;transform:none!important;}
+    .soon-tag{color:#ffcc00!important;border-color:#ffcc0055!important;background:#ffcc0011!important;}
+    .live-tag{color:var(--accent)!important;border-color:#00ff8855!important;background:#00ff8811!important;}
+    </style>
+</head>
+<body>
+
+<nav id="navbar">
+  <div class="nav-logo">Aaryan<span>.</span></div>
+  <div class="nav-right">
+    <a href="#about">About</a>
+    <a href="#skills">Skills</a>
+    <a href="#projects">Work</a>
+    <a href="#contact">Contact</a>
+    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme"></button>
+  </div>
+</nav>
+
+<section class="hero" id="home">
+  <div class="hero-content">
+    <div class="hero-eyebrow">Available for internships</div>
+    <h1 class="hero-title">
+      <div class="line"><span>AARYAN</span></div>
+      <div class="line"><span><span class="accent-word">GLITCHES</span></span></div>
+    </h1>
+    <div class="status-strip">
+      <span class="status-pill green">🟢 Open to Internships</span>
+      <span class="status-pill blue">🔵 Remote Work</span>
+      <span class="status-pill yellow">🟡 Full Time Jobs</span>
+    </div>
+    <p class="hero-sub">BCA Student & Web Developer based in Amritsar. I build web apps, integrate AI APIs, and ship real products.</p>
+    <div class="hero-actions">
+      <a href="#projects" class="btn btn-fill">View My Work</a>
+      <a href="#contact" class="btn btn-ghost">Get In Touch</a>
+    </div>
+  </div>
+  <div class="hero-counter">
+    <div class="counter-item"><div class="counter-num">4+</div><div class="counter-label">Projects</div></div>
+    <div class="counter-item"><div class="counter-num">3+</div><div class="counter-label">AI APIs</div></div>
+    <div class="counter-item"><div class="counter-num">∞</div><div class="counter-label">Curiosity</div></div>
+  </div>
+  <div class="hero-scroll">Scroll to explore</div>
+</section>
+
+<section class="section" id="about">
+  <div class="section-header reveal">
+    <div class="section-number">01 / About</div>
+    <h2 class="section-big-title">Who I <span class="dim">am.</span></h2>
+  </div>
+  <div class="about-grid">
+    <div class="about-text reveal reveal-delay-1">
+      <p>Hey! I'm <strong>Aaryan</strong> — a developer from Amritsar who loves building things on the web and experimenting with AI tools.</p>
+      <p>I work with <strong>Python, JavaScript</strong>, and love integrating AI APIs like <strong>Claude, ChatGPT, and Gemini</strong> into real-world projects.</p>
+      <p>When I'm not coding, I'm grinding DSA on LeetCode, exploring new AI tools, or planning my next project.</p>
+    </div>
+    <div class="about-details reveal reveal-delay-2">
+      <div class="detail-row"><span class="detail-key">Name</span><span class="detail-val">Aaryan</span></div>
+      <div class="detail-row"><span class="detail-key">College</span><span class="detail-val">DAV College, Amritsar (GNDU)</span></div>
+      <div class="detail-row"><span class="detail-key">Degree</span><span class="detail-val">BCA — 2023 to 2026</span></div>
+      <div class="detail-row"><span class="detail-key">Location</span><span class="detail-val">Amritsar, Punjab, India</span></div>
+      <div class="detail-row"><span class="detail-key">Email</span><span class="detail-val">aaryanv.red@gmail.com</span></div>
+      <div class="detail-row"><span class="detail-key">Status</span><span class="detail-val green">Open to Internships ✓</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="section skills-section" id="skills">
+  <div class="section-header reveal">
+    <div class="section-number">02 / Skills</div>
+    <h2 class="section-big-title">What I <span class="dim">know.</span></h2>
+  </div>
+  <div class="reveal reveal-delay-1">
+    <div class="skills-marquee-wrap">
+      <div class="skills-marquee">
+        <div class="skill-pill"><span>🐍</span>Python</div><div class="skill-pill"><span>⚡</span>JavaScript</div>
+        <div class="skill-pill"><span>🌐</span>HTML5</div><div class="skill-pill"><span>🎨</span>CSS3</div>
+        <div class="skill-pill"><span>🔥</span>Flask</div><div class="skill-pill"><span>📊</span>Streamlit</div>
+        <div class="skill-pill"><span>🅱️</span>Bootstrap</div><div class="skill-pill"><span>🤖</span>OpenAI API</div>
+        <div class="skill-pill"><span>💜</span>Claude API</div><div class="skill-pill"><span>✨</span>Gemini API</div>
+        <div class="skill-pill"><span>🐙</span>Git & GitHub</div><div class="skill-pill"><span>🗄️</span>MySQL</div>
+        <div class="skill-pill"><span>🐍</span>Python</div><div class="skill-pill"><span>⚡</span>JavaScript</div>
+        <div class="skill-pill"><span>🌐</span>HTML5</div><div class="skill-pill"><span>🎨</span>CSS3</div>
+        <div class="skill-pill"><span>🔥</span>Flask</div><div class="skill-pill"><span>📊</span>Streamlit</div>
+        <div class="skill-pill"><span>🅱️</span>Bootstrap</div><div class="skill-pill"><span>🤖</span>OpenAI API</div>
+        <div class="skill-pill"><span>💜</span>Claude API</div><div class="skill-pill"><span>✨</span>Gemini API</div>
+        <div class="skill-pill"><span>🐙</span>Git & GitHub</div><div class="skill-pill"><span>🗄️</span>MySQL</div>
+      </div>
+    </div>
+    <div class="skills-marquee-wrap" style="margin-top:1rem">
+      <div class="skills-marquee reverse">
+        <div class="skill-pill"><span>🧠</span>Prompt Engineering</div><div class="skill-pill"><span>🔗</span>REST APIs</div>
+        <div class="skill-pill"><span>💡</span>Problem Solving</div><div class="skill-pill"><span>📱</span>Responsive Design</div>
+        <div class="skill-pill"><span>☁️</span>GitHub Pages</div><div class="skill-pill"><span>🖥️</span>VS Code</div>
+        <div class="skill-pill"><span>🔍</span>DSA (Learning)</div><div class="skill-pill"><span>🔐</span>LocalStorage API</div>
+        <div class="skill-pill"><span>🧠</span>Prompt Engineering</div><div class="skill-pill"><span>🔗</span>REST APIs</div>
+        <div class="skill-pill"><span>💡</span>Problem Solving</div><div class="skill-pill"><span>📱</span>Responsive Design</div>
+        <div class="skill-pill"><span>☁️</span>GitHub Pages</div><div class="skill-pill"><span>🖥️</span>VS Code</div>
+        <div class="skill-pill"><span>🔍</span>DSA (Learning)</div><div class="skill-pill"><span>🔐</span>LocalStorage API</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="projects">
+  <div class="section-header reveal">
+    <div class="section-number">03 / Work</div>
+    <h2 class="section-big-title">What I've <span class="dim">built.</span></h2>
+  </div>
+  <div class="projects-list">
+    <a class="project-row reveal" href="https://aaryan-glitches.github.io/task-manager" target="_blank">
+      <div class="proj-left"><span class="proj-num">01</span><span class="proj-title">Task Manager App</span></div>
+      <div class="proj-right"><span class="proj-tag">HTML</span><span class="proj-tag">CSS</span><span class="proj-tag">JavaScript</span><span class="proj-tag live-tag">Live ↗</span></div>
+    </a>
+    <div class="project-row reveal reveal-delay-1 coming-soon-row">
+      <div class="proj-left"><span class="proj-num">02</span><span class="proj-title">AI Study Assistant</span></div>
+      <div class="proj-right"><span class="proj-tag">Python</span><span class="proj-tag">Flask</span><span class="proj-tag">OpenAI API</span><span class="proj-tag soon-tag">Coming Soon</span></div>
+    </div>
+    <div class="project-row reveal reveal-delay-2 coming-soon-row">
+      <div class="proj-left"><span class="proj-num">03</span><span class="proj-title">AI Chatbot Demo</span></div>
+      <div class="proj-right"><span class="proj-tag">Python</span><span class="proj-tag">Streamlit</span><span class="proj-tag">Claude API</span><span class="proj-tag soon-tag">Coming Soon</span></div>
+    </div>
+    <a class="project-row reveal reveal-delay-3" href="https://aaryan-glitches.github.io/portfolio" target="_blank">
+      <div class="proj-left"><span class="proj-num">04</span><span class="proj-title">Portfolio Website</span></div>
+      <div class="proj-right"><span class="proj-tag">HTML</span><span class="proj-tag">CSS</span><span class="proj-tag">JavaScript</span><span class="proj-tag live-tag">Live ↗</span></div>
+    </a>
+  </div>
+</section>
+
+<section class="section contact-section" id="contact">
+  <div class="reveal">
+    <div class="section-number" style="margin-bottom:2rem">04 / Contact</div>
+    <h2 class="contact-big">Let's <span>Talk</span><br/>Together.</h2>
+    <p class="contact-sub">Looking for internship opportunities in web development & AI.<br/>Reach out — I respond fast!</p>
+    <div class="contact-links">
+      <a href="mailto:aaryanv.red@gmail.com" class="contact-pill">📧 Email Me</a>
+      <a href="https://linkedin.com/in/aaryan-glitches" target="_blank" class="contact-pill">💼 LinkedIn</a>
+      <a href="https://github.com/aaryan-glitches" target="_blank" class="contact-pill">🐙 GitHub</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>© 2026 Aaryan<span style="color:var(--accent)">.</span></span>
+  <span>Built with ❤️ in Amritsar</span>
+</footer>
+
+<script>
+  window.addEventListener('scroll',()=>{
+    document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>50);
+  });
+  function toggleTheme(){
+    const h=document.documentElement;
+    h.setAttribute('data-theme',h.getAttribute('data-theme')==='dark'?'light':'dark');
+  }
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('active');});
+  },{threshold:.1});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
